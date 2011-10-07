@@ -3,9 +3,9 @@
 # ----------------------- #
 
 url: http://blog.vladimirm.com
-title: Vladimir's blog
-subtitle: A blogging framework for hackers.
-author: Vladimir
+title: Vladimir Momirov
+subtitle:
+author: Vladimir Momirov
 simple_search: http://google.com/search
 
 # RSS / Email (optional) subscription links (change if using something like Feedburner)
@@ -25,12 +25,12 @@ source: source
 destination: public
 plugins: plugins
 code_dir: downloads/code
-category_dir: blog/categories
+category_dir: categories
 markdown: rdiscount
 pygments: false # default python pygments have been replaced by pygments.rb
 
 paginate: 10          # Posts per page on the blog index
-pagination_dir: blog  # Directory base for pagination URLs eg. /blog/page/2/
+pagination_dir: /  # Directory base for pagination URLs eg. /blog/page/2/
 recent_posts: 5       # Posts in the sidebar Recent Posts section
 excerpt_link: "Read on &rarr;"  # "Continue reading" link text at the bottom of excerpted articles
 
@@ -75,8 +75,8 @@ delicious_user:
 delicious_count: 3
 
 # Disqus Comments
-disqus_short_name:
-disqus_show_comment_count: false
+disqus_short_name: vladimirmomirov
+disqus_show_comment_count: true
 
 # Google Analytics
 google_analytics_tracking_id: UA-18578779-3

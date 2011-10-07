@@ -1,2 +1,42 @@
 // This File is imported last, and will override other styles in the cascade
 // Add styles here to make changes without digging in too much
+#content {
+  .blog-index {
+    article {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      h1 {
+        font-size: .9em;
+        font-weight: normal;
+        line-height: 1.1em;
+        margin: 0px;
+        display: inline-block;
+      }
+      time {
+        display: inline-block;
+        color: #888888;
+        width:220px;
+      }
+    }
+  }
+}
+body {
+  margin:0;
+}
+body header {
+  background: transparent;
+}
+
+body header p {
+  font-size: .7em;
+  color: #888888;
+}
+
+body header a {
+  text-decoration: none;
+}
+
+body header img {
+  float:left;
+  margin-right: 25px;
+}

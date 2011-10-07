@@ -1,0 +1,9 @@
+{% if index %}
+  {% include post/date.html %}{{ time }}
+  <h1 class="entry-title"><a href="{{ root_url }}{{ post.url }}">{{ post.title | titlecase }}</a></h1>
+
+{% else %}
+  {% include post/date.html %}{{ time }}
+  <h1 class="entry-title">{{ page.title | titlecase }}</h1>
+
+{% endif %}
