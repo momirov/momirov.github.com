@@ -6,6 +6,7 @@ slug: export-files-from-mongodb-gridfs-with-directory-paths
 status: publish
 title: Export files from MongoDB GridFS with directory paths
 categories: mongodb
+comments: true
 ---
 
 MongoDB and GridFS are awesome, but I had to migrate some data to

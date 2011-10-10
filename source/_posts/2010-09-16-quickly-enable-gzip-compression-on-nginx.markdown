@@ -6,6 +6,7 @@ slug: quickly-enable-gzip-compression-on-nginx
 status: publish
 title: Quickly enable gzip compression on Nginx
 categories: nginx
+comments: true
 ---
 
 I've noticed today that css and javascript files are not getting

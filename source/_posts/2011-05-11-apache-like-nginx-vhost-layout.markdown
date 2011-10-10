@@ -6,6 +6,7 @@ slug: apache-like-nginx-vhost-layout
 status: publish
 title: Apache-like Nginx vhost layout
 categories: nginx
+comments: true
 ---
 
 I love how apache vhost files are organized under Debian. We have

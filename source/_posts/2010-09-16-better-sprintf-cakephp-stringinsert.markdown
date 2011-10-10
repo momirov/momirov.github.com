@@ -6,6 +6,7 @@ slug: better-sprintf-cakephp-stringinsert
 status: publish
 title: 'Better sprintf: CakePHP String::insert'
 categories: CakePHP
+comments: true
 ---
 
 Today I was re-factoring my code a bit and in some places decided
