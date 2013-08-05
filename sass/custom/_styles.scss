@@ -6,7 +6,6 @@
   }
   @include pie-clearfix;
   .blog-index {
-    
     max-width: 800px;
     margin: 60px auto;
     article {
@@ -41,6 +40,7 @@ body>header {
 body>footer {
   border: none;
   padding-top: 20px;
+  text-shadow: none;
 }
 
 body footer p {
