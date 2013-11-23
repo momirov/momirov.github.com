@@ -35,9 +35,3 @@ For example: **./gridfs localhost scen** will export all files
 from scen database on localhost to current directory, if you have
 directory structure in GridFS, it will create that directories too.
 
-You can ask questions, get help and say thanks in the comments.
-
-Bye.
-
-
-
