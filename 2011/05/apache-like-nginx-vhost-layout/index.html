@@ -1,0 +1,301 @@
+    <!DOCTYPE html>
+<html lang="en-us">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Vladimir Momirov">
+		<meta name="description" content="Describe your website">
+		<meta name="generator" content="Hugo 0.17" />
+		<title>Apache-like Nginx vhost layout &middot; Vladimir Momirov</title>
+		<link rel="shortcut icon" href="http://blog.vladimirm.comimages/favicon.ico">
+		<link rel="stylesheet" href="http://blog.vladimirm.comcss/style.css">
+		<link rel="stylesheet" href="http://blog.vladimirm.comcss/highlight.css">
+		
+
+		
+		<link rel="stylesheet" href="http://blog.vladimirm.comcss/monosocialiconsfont.css">
+		
+
+		
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	
+		<a href='http://blog.vladimirm.com'> <span class="arrow">←</span>Home</a>
+	
+
+	
+		<a href='http://blog.vladimirm.comabout'>About</a>
+	
+
+	
+</nav>
+
+        <section id="wrapper">
+            <article class="post">
+                <header>
+                    <h1>Apache-like Nginx vhost layout</h1>
+                    <h2 class="headline">
+                    May 11, 2011 
+                    <br>
+                    
+                    </h2>
+                </header>
+                <section id="post-body">
+                    <p>I love how apache vhost files are organized under Debian. We have
+two directories, one with all available sites (sites-available) and
+one with enabled sites (sites-enabled), enabled sites are just a
+symlink to conf file in sites-available directory. So if we want to
+enable one site just symlink it to sites-enabled directory and
+reload nginx, also when we need to disable a site we only delete
+the symlink for that vhost from sites-enabled. Because we only
+deleted symlink conf file remains if we want to enable that site
+again. All commands below are executed with root privileges! First
+thing first, we need to create directories for our config files, go
+into nginx conf directory (for me /opt/nginx/conf) and execute:</p>
+
+<pre><code>mkdir sites-available sites-enabled
+</code></pre>
+
+<p>Now open nginx.conf in your favourite editor. You will get
+something like this:</p>
+
+<pre><code>user nginx www;
+worker_processes  3;
+events {
+    worker_connections  1024;
+}
+
+http {
+    passenger_max_pool_size 4;
+    passenger_pool_idle_time 3000;
+    passenger_max_instances_per_app 2;
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    sendfile        on;
+    keepalive_timeout  65;
+    server_tokens off;
+    gzip  on;
+    client_max_body_size 200M;
+
+    server {
+        listen       80;
+        server_name  localhost;
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
+}
+</code></pre>
+
+<p>See the server section? Thats one virtual host and we want to
+extract it into separate vhost file. Cut and paste that section to
+a new file inside sites-available and name it localhost. Contents
+of a localhost file should be:</p>
+
+<pre><code>server {
+    listen       80;
+    server_name  localhost;
+    location / {
+        root   html;
+        index  index.html index.htm;
+    }
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   html;
+    }
+}
+</code></pre>
+
+<p>In nginx.conf file instead of server section that we cutted we have
+to include out sites-enabled directory. We can do that with
+&ldquo;include sites-enabled/*;&rdquo; line, and at the end nginx.cong should
+look like:</p>
+
+<pre><code>user nginx www;
+worker_processes  3;
+events {
+    worker_connections  1024;
+}
+
+http {
+    passenger_max_pool_size 4;
+    passenger_pool_idle_time 3000;
+    passenger_max_instances_per_app 2;
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    sendfile        on;
+    keepalive_timeout  65;
+    server_tokens off;
+    gzip  on;
+    client_max_body_size 200M;
+
+    include sites-enabled/*;
+}
+</code></pre>
+
+<p>We just need to do two things, symlink localhost file from
+sites-available to sites-enabled and reload nginx conf.</p>
+
+<pre><code>ln -s sites-available/localhost sites-enabled/localhost
+/etc/init.d/nginx reload
+</code></pre>
+
+<p>We are done with the setup, when you have the need to add another
+site you just add another file to sites-available directory, I for
+example have www.vladimirm.com file witch contains:</p>
+
+<pre><code>server {
+    listen   80;
+    server_name www.vladimirm.com vladimirm.com;
+    gzip on;
+    gzip_http_version 1.1;
+    gzip_comp_level 2;
+    gzip_types    text/plain text/css
+                  application/x-javascript text/xml
+                  application/xml application/xml+rss
+                  text/javascript;
+
+    location / {
+        index  index.html index.htm index.php;
+    }
+}
+</code></pre>
+
+<p>And I just symlink it and reload nginx:</p>
+
+<pre><code>ln -s sites-available/www.vladimirm.com sites-enabled/www.vladimirm.com
+/etc/init.d/nginx reload
+</code></pre>
+
+<p>If I need to disable www.vladimirm.com i just delete symlink to it
+from sites-enabled and reload nginx.</p>
+
+<pre><code>rm sites-enabled/www.vladimirm.com
+/etc/init.d/nginx reload
+</code></pre>
+
+<p>That way we don&rsquo;t loose the config file if we have to re enable the
+site.</p>
+
+                </section>
+            </article>
+            <footer id="post-meta" class="clearfix">
+                <a href="https://twitter.com/Your%20Twitter%20account">
+                        <img class="avatar" src="http://blog.vladimirm.comimages/avatar.png">
+                        <div>
+                            <span class="dark">Vladimir Momirov</span>
+                            <span></span>
+                        </div>
+                    </a>
+                <section id="sharing">
+                    <a class="twitter" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fblog.vladimirm.com%2f2011%2f05%2fapache-like-nginx-vhost-layout%2f - Apache-like%20Nginx%20vhost%20layout by @Your%20Twitter%20account"><span class="icon-twitter"> Tweet</span></a>
+
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"> Share</span>
+</a>
+
+                </section>
+            </footer>
+
+            
+
+            <ul id="post-list" class="archive readmore">
+    <h3>Read more</h3>
+    
+    
+        
+        <li>
+            <a href="http://blog.vladimirm.com/2013/11/basic-postgresql-benchmarking-in-10-minutes-with-pgbench/">Basic postgresql benchmarking in 10 minutes with pgbench<aside class="dates">Nov 23</aside></a>
+        </li>
+        
+   
+    
+        
+        <li>
+            <a href="http://blog.vladimirm.com/2011/06/export-files-from-mongodb-gridfs-with-directory-paths/">Export files from MongoDB GridFS with directory paths<aside class="dates">Jun 4</aside></a>
+        </li>
+        
+   
+    
+        
+        <li>
+            <a href="http://blog.vladimirm.com/2011/05/apache-like-nginx-vhost-layout/">Apache-like Nginx vhost layout<aside class="dates">May 11</aside></a>
+        </li>
+        
+   
+    
+        
+        <li>
+            <a href="http://blog.vladimirm.com/2010/09/quickly-enable-gzip-compression-on-nginx/">Quickly enable gzip compression on Nginx<aside class="dates">Sep 16</aside></a>
+        </li>
+        
+   
+    
+        
+        <li>
+            <a href="http://blog.vladimirm.com/2010/09/better-sprintf-cakephp-stringinsert/">Better sprintf: CakePHP String::insert<aside class="dates">Sep 16</aside></a>
+        </li>
+        
+   
+</ul>
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    
+    <a class="symbol" href="https://github.com/momirov">
+        github
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+    
+        © Copyright 2016 Vladimir Momirov
+    
+    </p>
+</footer>
+
+        </section>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://blog.vladimirm.comjs/main.js"></script>
+<script src="http://blog.vladimirm.comjs/highlight.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-18578779-3', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+    </body>
+</html>
