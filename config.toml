@@ -48,5 +48,7 @@ disqusShortname = ""
 # Add additional social link entries underneath
 [social]
     github   = "https://github.com/momirov"
+    twitter  = "https://twitter.com/svemirov"
+    email    = "blog@vladimirm.com"
 [permalinks]
     post = "/:year/:month/:title"
