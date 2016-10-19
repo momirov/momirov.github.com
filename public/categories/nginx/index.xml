@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Vladimir Momirov</title>
+    <link>http://blog.vladimirm.com/categories/nginx/index.xml</link>
+    <description>Recent content on Vladimir Momirov</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <atom:link href="http://blog.vladimirm.com/categories/nginx/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Apache-like Nginx vhost layout</title>
+      <link>http://blog.vladimirm.com/2011/05/apache-like-nginx-vhost-layout/</link>
+      <pubDate>Wed, 11 May 2011 14:16:36 +0000</pubDate>
+      
+      <guid>http://blog.vladimirm.com/2011/05/apache-like-nginx-vhost-layout/</guid>
+      <description>&lt;p&gt;I love how apache vhost files are organized under Debian. We have
+two directories, one with all available sites (sites-available) and
+one with enabled sites (sites-enabled), enabled sites are just a
+symlink to conf file in sites-available directory. So if we want to
+enable one site just symlink it to sites-enabled directory and
+reload nginx, also when we need to disable a site we only delete
+the symlink for that vhost from sites-enabled. Because we only
+deleted symlink conf file remains if we want to enable that site
+again. All commands below are executed with root privileges! First
+thing first, we need to create directories for our config files, go
+into nginx conf directory (for me /opt/nginx/conf) and execute:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mkdir sites-available sites-enabled
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now open nginx.conf in your favourite editor. You will get
+something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;user nginx www;
+worker_processes  3;
+events {
+    worker_connections  1024;
+}
+
+http {
+    passenger_max_pool_size 4;
+    passenger_pool_idle_time 3000;
+    passenger_max_instances_per_app 2;
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    sendfile        on;
+    keepalive_timeout  65;
+    server_tokens off;
+    gzip  on;
+    client_max_body_size 200M;
+
+    server {
+        listen       80;
+        server_name  localhost;
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;See the server section? Thats one virtual host and we want to
+extract it into separate vhost file. Cut and paste that section to
+a new file inside sites-available and name it localhost. Contents
+of a localhost file should be:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;server {
+    listen       80;
+    server_name  localhost;
+    location / {
+        root   html;
+        index  index.html index.htm;
+    }
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   html;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In nginx.conf file instead of server section that we cutted we have
+to include out sites-enabled directory. We can do that with
+&amp;ldquo;include sites-enabled/*;&amp;rdquo; line, and at the end nginx.cong should
+look like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;user nginx www;
+worker_processes  3;
+events {
+    worker_connections  1024;
+}
+
+http {
+    passenger_max_pool_size 4;
+    passenger_pool_idle_time 3000;
+    passenger_max_instances_per_app 2;
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    sendfile        on;
+    keepalive_timeout  65;
+    server_tokens off;
+    gzip  on;
+    client_max_body_size 200M;
+
+    include sites-enabled/*;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We just need to do two things, symlink localhost file from
+sites-available to sites-enabled and reload nginx conf.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ln -s sites-available/localhost sites-enabled/localhost
+/etc/init.d/nginx reload
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We are done with the setup, when you have the need to add another
+site you just add another file to sites-available directory, I for
+example have www.vladimirm.com file witch contains:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;server {
+    listen   80;
+    server_name www.vladimirm.com vladimirm.com;
+    gzip on;
+    gzip_http_version 1.1;
+    gzip_comp_level 2;
+    gzip_types    text/plain text/css
+                  application/x-javascript text/xml
+                  application/xml application/xml+rss
+                  text/javascript;
+
+    location / {
+        index  index.html index.htm index.php;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And I just symlink it and reload nginx:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ln -s sites-available/www.vladimirm.com sites-enabled/www.vladimirm.com
+/etc/init.d/nginx reload
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If I need to disable www.vladimirm.com i just delete symlink to it
+from sites-enabled and reload nginx.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rm sites-enabled/www.vladimirm.com
+/etc/init.d/nginx reload
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That way we don&amp;rsquo;t loose the config file if we have to re enable the
+site.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Quickly enable gzip compression on Nginx</title>
+      <link>http://blog.vladimirm.com/2010/09/quickly-enable-gzip-compression-on-nginx/</link>
+      <pubDate>Thu, 16 Sep 2010 17:58:59 +0000</pubDate>
+      
+      <guid>http://blog.vladimirm.com/2010/09/quickly-enable-gzip-compression-on-nginx/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;ve noticed today that css and javascript files are not getting
+gziped on my Nginx server. Gzip was turned on and it was working
+for html files but we have to tell nginx what additional content we
+need gziped
+&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;gzip&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;on&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color: #66d9ef&#34;&gt;gzip_http_version&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;.1&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color: #66d9ef&#34;&gt;gzip_comp_level&lt;/span&gt; &lt;span style=&#34;color: #ae81ff&#34;&gt;5&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #75715e&#34;&gt;# compression level, from 1-9, 9 = max&lt;/span&gt;
+&lt;span style=&#34;color: #66d9ef&#34;&gt;gzip_types&lt;/span&gt;
+    &lt;span style=&#34;color: #e6db74&#34;&gt;text/plain&lt;/span&gt;
+    &lt;span style=&#34;color: #e6db74&#34;&gt;text/css&lt;/span&gt;
+    &lt;span style=&#34;color: #e6db74&#34;&gt;application/x-javascript&lt;/span&gt;
+    &lt;span style=&#34;color: #e6db74&#34;&gt;text/xml&lt;/span&gt;
+    &lt;span style=&#34;color: #e6db74&#34;&gt;application/xml&lt;/span&gt;
+    &lt;span style=&#34;color: #e6db74&#34;&gt;application/xml+rss&lt;/span&gt;
+    &lt;span style=&#34;color: #e6db74&#34;&gt;text/javascript&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Just paste this code in http section of the nginx.conf file and
+you&amp;rsquo;re done.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

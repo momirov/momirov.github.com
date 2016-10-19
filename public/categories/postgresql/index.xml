@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Vladimir Momirov</title>
+    <link>http://blog.vladimirm.com/categories/postgresql/index.xml</link>
+    <description>Recent content on Vladimir Momirov</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <atom:link href="http://blog.vladimirm.com/categories/postgresql/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Basic postgresql benchmarking in 10 minutes with pgbench</title>
+      <link>http://blog.vladimirm.com/2013/11/basic-postgresql-benchmarking-in-10-minutes-with-pgbench/</link>
+      <pubDate>Sat, 23 Nov 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://blog.vladimirm.com/2013/11/basic-postgresql-benchmarking-in-10-minutes-with-pgbench/</guid>
+      <description>
+
+&lt;h2 id=&#34;why-benchmark&#34;&gt;Why benchmark?&lt;/h2&gt;
+
+&lt;p&gt;Benchmark can be used beforehand to uncover hidden problems. Maybe I forgot to increase
+connection limit of 100 for a server that is expecting high load, maybe there is not
+enough resources to handle that many clients, etc, you get the picture.&lt;/p&gt;
+
+&lt;h2 id=&#34;why-pgbench&#34;&gt;Why pgbench?&lt;/h2&gt;
+
+&lt;p&gt;For me there are two things: it is fast to setup, it is simple to use. You can checkout
+&lt;a href=&#34;http://www.postgresql.org/docs/9.1/static/pgbench.html&#34;&gt;pgbench page&lt;/a&gt; on
+postgresql.org for all options and how it exactly works.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-benchmark&#34;&gt;The benchmark&lt;/h2&gt;
+
+&lt;p&gt;For this benchmark I used 2 droplets on
+&lt;a href=&#34;https://www.digitalocean.com/?refcode=92eab3d251a3&#34;&gt;Digital Ocean (refferal link)&lt;/a&gt;,
+8gb for the server and 2gb for a client. Both droplets are running Ubuntu 13.04 and
+postgresql 9.1 is installed from repos. Pgbench tables where initialized with scale
+factor 1000 because we will run the benchmark with max 1000 simultaneous connections.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;pgbench -i -s 1000
+
+ schemaname |     relname      | n_live_tup
+------------+------------------+------------
+ public     | pgbench_accounts |  100000000
+ public     | pgbench_tellers  |      10000
+ public     | pgbench_branches |       1000
+ public     | pgbench_history  |          0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Default configuration results:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;pgbench -c 10 -T 60&lt;/code&gt;&lt;/p&gt;
+
+&lt;div&gt;
+    &lt;canvas id=&#34;before&#34; width=&#34;950&#34; height=&#34;300&#34;&gt;&lt;/canvas&gt;
+    
+    &lt;script src=&#34;https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.js&#34;&gt;&lt;/script&gt;
+    &lt;script src=&#34;http://blog.vladimirm.com/js/beforeChart.js&#34;&gt;&lt;/script&gt;
+    
+&lt;/div&gt;
+
+
+&lt;p&gt;Shown on Y axis is number of successful connections in 60 seconds, on the X axis client number. Chart shows us that we hit a limit of 100 concurent connections and
+also sweet spot for current configuration is around 50 concurrent connections. For the sake of benchmark we raised Postgresql connection limit to 1000. We didn&amp;rsquo;t do any other tweaks.&lt;/p&gt;
+
+&lt;div&gt;
+    &lt;canvas id=&#34;after&#34; width=&#34;950&#34; height=&#34;300&#34;&gt;&lt;/canvas&gt;
+    
+    &lt;script src=&#34;https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.js&#34;&gt;&lt;/script&gt;
+    &lt;script src=&#34;http://blog.vladimirm.com/js/afterChart.js&#34;&gt;&lt;/script&gt;
+    
+&lt;/div&gt;
+
+
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;Benchmarking Postgresql is vital before deploying your app. It can uncover obvious problems. Please do this, it doesn&amp;rsquo;t take much time.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

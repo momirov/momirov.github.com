@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://blog.vladimirm.com/</loc>
+    <lastmod>2015-06-20T14:02:37+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.vladimirm.com/about/</loc>
+    <lastmod>2015-06-20T14:02:37+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.vladimirm.com/2013/11/basic-postgresql-benchmarking-in-10-minutes-with-pgbench/</loc>
+    <lastmod>2013-11-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.vladimirm.com/2011/06/export-files-from-mongodb-gridfs-with-directory-paths/</loc>
+    <lastmod>2011-06-04T08:18:40+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.vladimirm.com/2011/05/apache-like-nginx-vhost-layout/</loc>
+    <lastmod>2011-05-11T14:16:36+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.vladimirm.com/2010/09/quickly-enable-gzip-compression-on-nginx/</loc>
+    <lastmod>2010-09-16T17:58:59+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.vladimirm.com/2010/09/better-sprintf-cakephp-stringinsert/</loc>
+    <lastmod>2010-09-16T16:32:57+00:00</lastmod>
+  </url>
+  
+</urlset>

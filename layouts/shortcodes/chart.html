@@ -1,0 +1,7 @@
+<div>
+    <canvas id="{{ .Get "id"}}" width="{{ .Get "width" }}" height="{{ .Get "height" }}"></canvas>
+    {{ if .Get "js" }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.js"></script>
+    <script src="{{ .Site.BaseURL }}{{ .Get "js" }}"></script>
+    {{ end }}
+</div>

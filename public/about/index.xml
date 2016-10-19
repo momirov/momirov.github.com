@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>About-rsses on Vladimir Momirov</title>
+    <link>http://blog.vladimirm.com/about/index.xml</link>
+    <description>Recent content in About-rsses on Vladimir Momirov</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 20 Jun 2015 14:02:37 +0200</lastBuildDate>
+    <atom:link href="http://blog.vladimirm.com/about/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>About</title>
+      <link>http://blog.vladimirm.com/about/</link>
+      <pubDate>Sat, 20 Jun 2015 14:02:37 +0200</pubDate>
+      
+      <guid>http://blog.vladimirm.com/about/</guid>
+      <description>&lt;p&gt;Hi I&amp;rsquo;m Vladimir Momirov, web developer currently based in Novi Sad, Serbia. I&amp;rsquo;m employed at &lt;a href=&#34;http://www.saturized.com&#34;&gt;Saturized&lt;/a&gt;, we are working on exciting projects with awesome people.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
