@@ -10,7 +10,7 @@ disqusShortname = ""
 
 [params]
 	name = "Vladimir Momirov"
-	description = "Describe your website"
+	description = "Personal blog about web development"
 	bio = "Programmer"
 	# Enter optionally your twitter account
 	twitter = "svemirov"
@@ -33,7 +33,7 @@ disqusShortname = ""
 	readMore = ""
 	copyright = ""
 	# Sharing options and author information in posts
-	aboutAuthor = "I'm an enthusiastic gopher."
+	aboutAuthor = "A passionate web developer."
 	tweet = ""
 	share = ""
 	# 404 page
