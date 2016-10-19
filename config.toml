@@ -1,5 +1,5 @@
 # Site settings
-baseurl = "http://blog.vladimirm.com"
+baseurl = "http://blog.vladimirm.com/"
 languageCode = "en-us"
 title = "Vladimir Momirov"
 theme = "hugo-cactus-theme"

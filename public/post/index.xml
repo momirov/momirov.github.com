@@ -55,7 +55,7 @@ factor 1000 because we will run the benchmark with max 1000 simultaneous connect
     &lt;canvas id=&#34;before&#34; width=&#34;950&#34; height=&#34;300&#34;&gt;&lt;/canvas&gt;
     
     &lt;script src=&#34;https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.js&#34;&gt;&lt;/script&gt;
-    &lt;script src=&#34;http://blog.vladimirm.com/js/beforeChart.js&#34;&gt;&lt;/script&gt;
+    &lt;script src=&#34;http://blog.vladimirm.com//js/beforeChart.js&#34;&gt;&lt;/script&gt;
     
 &lt;/div&gt;
 
@@ -67,7 +67,7 @@ also sweet spot for current configuration is around 50 concurrent connections. F
     &lt;canvas id=&#34;after&#34; width=&#34;950&#34; height=&#34;300&#34;&gt;&lt;/canvas&gt;
     
     &lt;script src=&#34;https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.js&#34;&gt;&lt;/script&gt;
-    &lt;script src=&#34;http://blog.vladimirm.com/js/afterChart.js&#34;&gt;&lt;/script&gt;
+    &lt;script src=&#34;http://blog.vladimirm.com//js/afterChart.js&#34;&gt;&lt;/script&gt;
     
 &lt;/div&gt;
 
