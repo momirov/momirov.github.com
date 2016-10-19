@@ -9,7 +9,8 @@ This problem affects me frequently since Ubuntu has released version 16.04.
 It has a bug with low memory systems. This is especially bad on instances with
 CPU credits, since this bug will eat them all. Adding swap file doesn't help and one
 way to fix this issue on Amazon is to override udev rules from
-``/lib/udev/rules.d/40-vm-hotadd.rules.``
+``/lib/udev/rules.d/40-vm-hotadd.rules.`` and reboot the system after. Reboot is
+required.
 
     touch /etc/udev/rules.d/40-vm-hotadd.rules
     reboot
