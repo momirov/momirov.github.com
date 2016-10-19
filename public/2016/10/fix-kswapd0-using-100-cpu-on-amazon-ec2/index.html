@@ -7,7 +7,7 @@
 		<meta name="author" content="Vladimir Momirov">
 		<meta name="description" content="Describe your website">
 		<meta name="generator" content="Hugo 0.17" />
-		<title>Apache-like Nginx vhost layout &middot; Vladimir Momirov</title>
+		<title>Fix kswapd0 using 100% CPU on Amazon EC2 &middot; Vladimir Momirov</title>
 		<link rel="shortcut icon" href="http://blog.vladimirm.com/images/favicon.ico">
 		<link rel="stylesheet" href="http://blog.vladimirm.com/css/style.css">
 		<link rel="stylesheet" href="http://blog.vladimirm.com/css/highlight.css">
@@ -37,156 +37,29 @@
         <section id="wrapper">
             <article class="post">
                 <header>
-                    <h1>Apache-like Nginx vhost layout</h1>
+                    <h1>Fix kswapd0 using 100% CPU on Amazon EC2</h1>
                     <h2 class="headline">
-                    May 11, 2011 
+                    October 19, 2016 
                     <br>
                     
                     </h2>
                 </header>
                 <section id="post-body">
-                    <p>I love how apache vhost files are organized under Debian. We have
-two directories, one with all available sites (sites-available) and
-one with enabled sites (sites-enabled), enabled sites are just a
-symlink to conf file in sites-available directory. So if we want to
-enable one site just symlink it to sites-enabled directory and
-reload nginx, also when we need to disable a site we only delete
-the symlink for that vhost from sites-enabled. Because we only
-deleted symlink conf file remains if we want to enable that site
-again. All commands below are executed with root privileges! First
-thing first, we need to create directories for our config files, go
-into nginx conf directory (for me /opt/nginx/conf) and execute:</p>
+                    <p>This problem affects me frequently since Ubuntu has released version 16.04.
+It has a bug with low memory systems. This is especially bad on instances with
+CPU credits, since this bug will eat them all. Adding swap file doesn&rsquo;t help and one
+way to fix this issue on Amazon is to override udev rules from
+<code>/lib/udev/rules.d/40-vm-hotadd.rules.</code></p>
 
-<pre><code>mkdir sites-available sites-enabled
+<pre><code>touch /etc/udev/rules.d/40-vm-hotadd.rules
+reboot
 </code></pre>
 
-<p>Now open nginx.conf in your favourite editor. You will get
-something like this:</p>
+<p>When you login you can also drop caches to make the machine more responsive,
+this temporary reduces CPU usage, but it will go up again after some time.</p>
 
-<pre><code>user nginx www;
-worker_processes  3;
-events {
-    worker_connections  1024;
-}
-
-http {
-    passenger_max_pool_size 4;
-    passenger_pool_idle_time 3000;
-    passenger_max_instances_per_app 2;
-    include       mime.types;
-    default_type  application/octet-stream;
-
-    sendfile        on;
-    keepalive_timeout  65;
-    server_tokens off;
-    gzip  on;
-    client_max_body_size 200M;
-
-    server {
-        listen       80;
-        server_name  localhost;
-        location / {
-            root   html;
-            index  index.html index.htm;
-        }
-        error_page   500 502 503 504  /50x.html;
-        location = /50x.html {
-            root   html;
-        }
-    }
-}
+<pre><code>echo 1 &gt; /proc/sys/vm/drop_caches
 </code></pre>
-
-<p>See the server section? Thats one virtual host and we want to
-extract it into separate vhost file. Cut and paste that section to
-a new file inside sites-available and name it localhost. Contents
-of a localhost file should be:</p>
-
-<pre><code>server {
-    listen       80;
-    server_name  localhost;
-    location / {
-        root   html;
-        index  index.html index.htm;
-    }
-    error_page   500 502 503 504  /50x.html;
-    location = /50x.html {
-        root   html;
-    }
-}
-</code></pre>
-
-<p>In nginx.conf file instead of server section that we cutted we have
-to include out sites-enabled directory. We can do that with
-&ldquo;include sites-enabled/*;&rdquo; line, and at the end nginx.cong should
-look like:</p>
-
-<pre><code>user nginx www;
-worker_processes  3;
-events {
-    worker_connections  1024;
-}
-
-http {
-    passenger_max_pool_size 4;
-    passenger_pool_idle_time 3000;
-    passenger_max_instances_per_app 2;
-    include       mime.types;
-    default_type  application/octet-stream;
-
-    sendfile        on;
-    keepalive_timeout  65;
-    server_tokens off;
-    gzip  on;
-    client_max_body_size 200M;
-
-    include sites-enabled/*;
-}
-</code></pre>
-
-<p>We just need to do two things, symlink localhost file from
-sites-available to sites-enabled and reload nginx conf.</p>
-
-<pre><code>ln -s sites-available/localhost sites-enabled/localhost
-/etc/init.d/nginx reload
-</code></pre>
-
-<p>We are done with the setup, when you have the need to add another
-site you just add another file to sites-available directory, I for
-example have www.vladimirm.com file witch contains:</p>
-
-<pre><code>server {
-    listen   80;
-    server_name www.vladimirm.com vladimirm.com;
-    gzip on;
-    gzip_http_version 1.1;
-    gzip_comp_level 2;
-    gzip_types    text/plain text/css
-                  application/x-javascript text/xml
-                  application/xml application/xml+rss
-                  text/javascript;
-
-    location / {
-        index  index.html index.htm index.php;
-    }
-}
-</code></pre>
-
-<p>And I just symlink it and reload nginx:</p>
-
-<pre><code>ln -s sites-available/www.vladimirm.com sites-enabled/www.vladimirm.com
-/etc/init.d/nginx reload
-</code></pre>
-
-<p>If I need to disable www.vladimirm.com i just delete symlink to it
-from sites-enabled and reload nginx.</p>
-
-<pre><code>rm sites-enabled/www.vladimirm.com
-/etc/init.d/nginx reload
-</code></pre>
-
-<p>That way we don&rsquo;t loose the config file if we have to re enable the
-site.</p>
 
                 </section>
             </article>
@@ -199,7 +72,7 @@ site.</p>
                         </div>
                     </a>
                 <section id="sharing">
-                    <a class="twitter" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fblog.vladimirm.com%2f2011%2f05%2fapache-like-nginx-vhost-layout%2f - Apache-like%20Nginx%20vhost%20layout by @Your%20Twitter%20account"><span class="icon-twitter"> Tweet</span></a>
+                    <a class="twitter" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fblog.vladimirm.com%2f2016%2f10%2ffix-kswapd0-using-100-cpu-on-amazon-ec2 - Fix%20kswapd0%20using%20100%25%20CPU%20on%20Amazon%20EC2 by @Your%20Twitter%20account"><span class="icon-twitter"> Tweet</span></a>
 
 <a class="facebook" href="#" onclick="
     window.open(

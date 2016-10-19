@@ -6,8 +6,32 @@
     <description>Recent content in Post-rsses on Vladimir Momirov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 23 Nov 2013 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 19 Oct 2016 12:52:06 +0200</lastBuildDate>
     <atom:link href="http://blog.vladimirm.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Fix kswapd0 using 100% CPU on Amazon EC2</title>
+      <link>http://blog.vladimirm.com/2016/10/fix-kswapd0-using-100-cpu-on-amazon-ec2</link>
+      <pubDate>Wed, 19 Oct 2016 12:52:06 +0200</pubDate>
+      
+      <guid>http://blog.vladimirm.com/2016/10/fix-kswapd0-using-100-cpu-on-amazon-ec2</guid>
+      <description>&lt;p&gt;This problem affects me frequently since Ubuntu has released version 16.04.
+It has a bug with low memory systems. This is especially bad on instances with
+CPU credits, since this bug will eat them all. Adding swap file doesn&amp;rsquo;t help and one
+way to fix this issue on Amazon is to override udev rules from
+&lt;code&gt;/lib/udev/rules.d/40-vm-hotadd.rules.&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;touch /etc/udev/rules.d/40-vm-hotadd.rules
+reboot
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;When you login you can also drop caches to make the machine more responsive,
+this temporary reduces CPU usage, but it will go up again after some time.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;echo 1 &amp;gt; /proc/sys/vm/drop_caches
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>Basic postgresql benchmarking in 10 minutes with pgbench</title>
