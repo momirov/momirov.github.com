@@ -49,6 +49,6 @@ disqusShortname = ""
 [social]
     github   = "https://github.com/momirov"
     twitter  = "https://twitter.com/svemirov"
-    email    = "mailto:blog@vladimirm.com"
+    email    = "mailto:&#98;&#x6c;&#111;&#103;&#64;&#x76;&#108;&#97;&#x64;&#x69;&#x6d;&#105;&#x72;&#x6d;&#46;&#99;&#x6f;&#x6d;"
 [permalinks]
     post = "/:year/:month/:title"
