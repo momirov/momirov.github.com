@@ -13,7 +13,7 @@ disqusShortname = ""
 	description = "Describe your website"
 	bio = "Programmer"
 	# Enter optionally your twitter account
-	twitter = "Your Twitter account"
+	twitter = "svemirov"
 	enableRSS = true
 
 	# Add custom assets with their paths relative to the static folder
